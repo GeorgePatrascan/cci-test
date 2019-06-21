@@ -108,7 +108,7 @@
                 <artifactId>maven-packagecloud-wagon</artifactId>
                 <version>0.0.4</version>
             </extension>
-        </extensions>
+        </extensions><!---->
     </build>
 
 </project>
