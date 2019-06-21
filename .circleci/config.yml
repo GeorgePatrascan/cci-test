@@ -12,8 +12,7 @@ jobs:
 
       # Download and cache dependencies
       - restore_cache:
-          key:
-            - app-working-dir-{{ checksum "pom.xml" }}
+          key: app-working-dir-{{ checksum "pom.xml" }}
 
       - run: mvn dependency:go-offline
 
