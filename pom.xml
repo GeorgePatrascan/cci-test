@@ -20,7 +20,18 @@
     <scm>
         <developerConnection>scm:git:git@github.com:GeorgePatrascan/cci-test.git</developerConnection>
       <tag>HEAD</tag>
-  </scm>
+    </scm>
+
+    <distributionManagement>
+        <repository>
+            <id>packagecloud-george-patrascan</id>
+            <url>packagecloud-george-patrascan</url>
+        </repository>
+        <snapshotRepository>
+            <id>packagecloud-george-patrascan</id>
+            <url>packagecloud-george-patrascan</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <dependencies>
         <dependency>
@@ -91,6 +102,13 @@
                 </configuration>
             </plugin>
         </plugins>
+        <extensions>
+            <extension>
+                <groupId>io.packagecloud.maven.wagon</groupId>
+                <artifactId>maven-packagecloud-wagon</artifactId>
+                <version>0.0.4</version>
+            </extension>
+        </extensions>
     </build>
 
 </project>

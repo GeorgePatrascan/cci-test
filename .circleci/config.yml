@@ -48,7 +48,17 @@ jobs:
           destination: jars
           when: always
 
-#      - store_artifacts:
-##          path: "target/cci-test-*-SNAPSHOT.jar"
-#          path: "target/cci-test-0.0.2-SNAPSHOT.jar"
 
+dependencies:
+  override:
+    - mvn -DskipTests clean install dependency:resolve-plugins dependency:go-offline
+
+test:
+  override:
+    - mvn -o surefire:test
+
+deployment:
+  main:
+    branch: master
+    commands:
+      - mvn -s .circleci.settings.xml -DskipTests deploy
