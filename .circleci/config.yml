@@ -20,8 +20,10 @@ jobs:
       - save_cache:
           paths:
             - ~/.m2
-          key: app-working-dir-{{ checksum "pom.xml" }}
+          keys: app-working-dir-{{ checksum "pom.xml" }}
+
       - run: mvn package
+
       - store_test_results:
           path: target/surefire-reports
       - store_artifacts:
