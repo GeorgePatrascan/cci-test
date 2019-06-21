@@ -22,9 +22,7 @@ jobs:
           key: app-working-dir-{{ checksum "pom.xml" }}
 
       - run:
-        name: Package
-        command: |
-          mvn clean package
+        mvn package
 
       - run:
           name: Save test results
