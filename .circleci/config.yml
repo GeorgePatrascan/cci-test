@@ -25,5 +25,3 @@ jobs:
       # package into a jar
       - run: mvn clean package
 
-      # build and push docker image to docker hub
-      - run: mvn clean package
