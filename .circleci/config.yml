@@ -38,7 +38,19 @@ jobs:
       - store_artifacts:
           path: ~/test-results/junit
 
+      - run:
+          name: Collect jar
+          command: |
+            mkdir -p ~/jars
+            find . -type f -regex "*.target/.*jar" -exec cp {} ~/jars/ \;
+          when: always
       - store_artifacts:
-#          path: "target/cci-test-*-SNAPSHOT.jar"
-          path: "target/cci-test-0.0.2-SNAPSHOT.jar"
+          name: Upload jars
+          path: ~/jars
+          destination: jars
+          when: always
+
+#      - store_artifacts:
+##          path: "target/cci-test-*-SNAPSHOT.jar"
+#          path: "target/cci-test-0.0.2-SNAPSHOT.jar"
 
