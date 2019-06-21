@@ -1,15 +1,96 @@
-# Use the latest 2.1 version of CircleCI pipeline processing engine, see https://circleci.com/docs/2.0/configuration-reference/
 version: 2.1
 
-# Use a package of configuration called an orb, see https://circleci.com/docs/2.0/orb-intro/
-orbs:
-  # Declare a dependency on the welcome-orb
-  welcome: circleci/welcome-orb@0.3.1
+references:
+  save_to_cache: &save_to_cache
+    save_cache:
+      paths:
+        - ~/.m2
+      key: app-working-dir-{{ checksum "pom.xml" }}
+  restore_from_cache: &restore_from_cache
+    restore_cache:
+      key: app-working-dir-{{ checksum "pom.xml" }}
 
-# Orchestrate or schedule a set of jobs, see https://circleci.com/docs/2.0/workflows/
+  container_config: &container_config
+    docker:
+      - image: circleci/openjdk:11.0.1-jdk
+    working_directory: ~/app-working-dir
+
+
+jobs:
+  build:
+    <<: *container_config
+    steps:
+      - checkout
+      - *restore_from_cache
+      - run:
+          name: Package without testing
+          command: mvn -DskipTests clean package dependency:resolve-plugins dependency:go-offline
+      - *save_to_cache
+      - run:
+          name: Collect jar
+          command: |
+            mkdir -p ~/jars
+            find . -type f -regex ".*/target/.*jar" -exec cp {} ~/jars/ \;
+          when: always
+      - store_artifacts:
+          name: Upload jars
+          path: ~/jars
+          destination: jars
+          when: always
+
+  test:
+    <<: *container_config
+    steps:
+      - checkout
+      - *restore_from_cache
+      - run:
+          name: Resolve plugins
+          command: mvn -DskipTests clean install dependency:resolve-plugins dependency:go-offline
+      - *save_to_cache
+      - run:
+          name: Surefire test
+          command: mvn surefire:test
+      - run:
+          name: Save test results
+          command: |
+            mkdir -p ~/test-results/junit/
+            find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} ~/test-results/junit/ \;
+          when: always
+      - store_test_results:
+          path: ~/test-results
+      - store_artifacts:
+          path: ~/test-results/junit
+
+  deployment:
+    <<: *container_config
+    steps:
+      - checkout
+      - *restore_from_cache
+      - *save_to_cache
+      - run:
+          name: Deploy to Package Cloud
+          command: mvn -s .circleci.settings.xml -DskipTests deploy
+
 workflows:
-  # Name the workflow "Welcome"
-  Welcome:
-    # Run the welcome/run job in its own container
+  version: 2
+#  deployment should happen only for commits tagged by maven release plugin
+  build-test-and-deploy:
     jobs:
-      - welcome/run
+      - build:
+          filters:
+            tags:
+              only: /.*/
+      - test:
+          filters:
+            tags:
+              only: /.*/
+          requires:
+            - build
+      - deployment:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^.+\d+\.\d+\.\d+$/
+          requires:
+            - test
