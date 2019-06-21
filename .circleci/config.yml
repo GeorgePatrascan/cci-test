@@ -39,5 +39,5 @@ jobs:
           path: ~/test-results/junit
 
       - store_artifacts:
-          path: target/cci-test-*-SNAPSHOT.jar
+          path: "target/cci-test-*-SNAPSHOT.jar"
 
