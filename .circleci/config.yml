@@ -12,18 +12,51 @@ jobs:
 
       # Download and cache dependencies
       - restore_cache:
-          keys:
-            - cci-test-{{ checksum "pom.xml" }}
+          key: app-working-dir-{{ checksum "pom.xml" }}
 
       - run: mvn dependency:go-offline
 
       - save_cache:
           paths:
             - ~/.m2
-          key: cci-test-{{ checksum "pom.xml" }}
+          key: app-working-dir-{{ checksum "pom.xml" }}
 
-      # package into a jar
-      - run: mvn clean package
+      - run: mvn package
 
-      # build and push docker image to docker hub
-      - run: mvn clean package
+      - run:
+          name: Save test results
+          command: |
+            mkdir -p ~/test-results/junit/
+            find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} ~/test-results/junit/ \;
+          when: always
+
+      - store_test_results:
+          path: ~/test-results
+
+      - store_artifacts:
+          path: ~/test-results/junit
+
+      - run:
+          name: Collect jar
+          command: |
+            mkdir -p ~/jars
+            find . -type f -regex ".*/target/.*jar" -exec cp {} ~/jars/ \;
+          when: always
+      - store_artifacts:
+          name: Upload jars
+          path: ~/jars
+          destination: jars
+          when: always
+dependencies:
+  override:
+    - mvn -DskipTests clean install dependency:resolve-plugins dependency:go-offline
+
+test:
+  override:
+    - mvn -o surefire:test
+
+deployment:
+  main:
+    branch: master
+    commands:
+      - mvn -s .circleci.settings.xml -DskipTests deploy
