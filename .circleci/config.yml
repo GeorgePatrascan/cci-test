@@ -20,12 +20,12 @@ jobs:
       - save_cache:
           paths:
             - ~/.m2
-          keys: app-working-dir-{{ checksum "pom.xml" }}
+          key: app-working-dir-{{ checksum "pom.xml" }}
 
       - run: mvn package
 
       - store_test_results:
           path: target/surefire-reports
       - store_artifacts:
-          path: "target/cci-test-*.jar"
+          path: target/cci-test-0.0.1-SNAPSHOT.jar
 
