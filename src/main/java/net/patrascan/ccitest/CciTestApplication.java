@@ -3,6 +3,7 @@ package net.patrascan.ccitest;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+/* trigger commit */
 @SpringBootApplication
 public class CciTestApplication {
 
