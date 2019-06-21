@@ -42,7 +42,7 @@ jobs:
           name: Collect jar
           command: |
             mkdir -p ~/jars
-            find . -type f -regex "*.target/.*jar" -exec cp {} ~/jars/ \;
+            find . -type f -regex ".*/target/.*jar" -exec cp {} ~/jars/ \;
           when: always
       - store_artifacts:
           name: Upload jars
