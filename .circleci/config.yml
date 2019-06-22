@@ -72,7 +72,7 @@ jobs:
             - ~/.m2
           key: app-working-dir-{{ checksum "pom.xml" }}
 
-      - run: mvn -o surefire:test
+      - run: mvn surefire:test
 
       - run:
           name: Save test results
