@@ -108,6 +108,8 @@ workflows:
             - build
       - deployment:
           filters:
+            branches:
+              ignore: /.*/
             tags:
               only: /^.+\d+\.\d+\.\d+$/
           requires:
