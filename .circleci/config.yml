@@ -94,10 +94,14 @@ workflows:
     jobs:
       - build:
           filters:
+            branches:
+              only: /.*/
             tags:
               ignore: /^.+\d+\.\d+\.\d+$/
       - test:
           filters:
+            branches:
+              only: /.*/
             tags:
               ignore: /^.+\d+\.\d+\.\d+$/
           requires:
