@@ -101,6 +101,8 @@ workflows:
           filters:
             branches:
               only: master
+            tags:
+              only: /^cci-test-\d+\.\d+\.\d+$/
 
 
 #dependencies:
