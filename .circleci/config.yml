@@ -16,27 +16,13 @@ jobs:
           key: app-working-dir-{{ checksum "pom.xml" }}
 
 #      - run: mvn dependency:go-offline
-      - run: mvn -DskipTests clean install dependency:resolve-plugins dependency:go-offline
+#      - run: mvn -DskipTests clean install dependency:resolve-plugins dependency:go-offline
+      - run: mvn -DskipTests clean package dependency:resolve-plugins dependency:go-offline
 
       - save_cache:
           paths:
             - ~/.m2
           key: app-working-dir-{{ checksum "pom.xml" }}
-
-      - run: mvn package
-
-      - run:
-          name: Save test results
-          command: |
-            mkdir -p ~/test-results/junit/
-            find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} ~/test-results/junit/ \;
-          when: always
-
-      - store_test_results:
-          path: ~/test-results
-
-      - store_artifacts:
-          path: ~/test-results/junit
 
       - run:
           name: Collect jar
@@ -49,6 +35,7 @@ jobs:
           path: ~/jars
           destination: jars
           when: always
+
 # TEST STAGE
   test:
     docker:
@@ -96,7 +83,9 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           key: app-working-dir-{{ checksum "pom.xml" }}
-      - run: mvn -s .circleci.settings.xml -DskipTests deploy
+      - run:
+          name: Deploy to Package Cloud
+          command: mvn -s .circleci.settings.xml -DskipTests deploy
 
 workflows:
   version: 2
@@ -121,9 +110,9 @@ workflows:
 #test:
 #  override:
 #    - mvn -o surefire:test
-
-deployment:
-  main:
-    branch: master
-    commands:
-      - mvn -s .circleci.settings.xml -DskipTests deploy
+#
+#deployment:
+#  main:
+#    branch: master
+#    commands:
+#      - mvn -s .circleci.settings.xml -DskipTests deploy
