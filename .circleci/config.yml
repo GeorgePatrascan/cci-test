@@ -90,52 +90,20 @@ jobs:
 workflows:
   version: 2
 #  deployment should happen only for commits tagged by maven release plugin
-  build-test:
-    jobs:
-      - build:
-          filters:
-            branches:
-              only: /.*/
-            tags:
-              ignore: /^.+\d+\.\d+\.\d+$/
-      - test:
-          filters:
-            branches:
-              only: /.*/
-            tags:
-              ignore: /^.+\d+\.\d+\.\d+$/
-          requires:
-            - build
-#      - deployment:
-#          requires:
-#            - test
-#          filters:
-##            branches:
-##              only: master
-#            tags:
-#              only: /^.+\d+\.\d+\.\d+$/
-##              only: /^cci-test-\d+\.\d+\.\d+$/
-
   build-test-and-deploy:
     jobs:
       - build:
           filters:
-            branches:
-              ignore: /.*/
             tags:
-              only: /^.+\d+\.\d+\.\d+$/
+              only: /.*/
       - test:
           filters:
-            branches:
-              ignore: /.*/
             tags:
-              only: /^.+\d+\.\d+\.\d+$/
+              only: /.*/
           requires:
             - build
       - deployment:
           filters:
-            branches:
-              ignore: /.*/
             tags:
               only: /^.+\d+\.\d+\.\d+$/
           requires:
