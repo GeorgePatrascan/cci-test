@@ -25,11 +25,11 @@
     <distributionManagement>
         <repository>
             <id>packagecloud-george-patrascan</id>
-            <url>packagecloud-george-patrascan</url>
+            <url>packagecloud+https://packagecloud.io/george_patrascan/gp-repository</url>
         </repository>
         <snapshotRepository>
             <id>packagecloud-george-patrascan</id>
-            <url>packagecloud-george-patrascan</url>
+            <url>packagecloud+https://packagecloud.io/george_patrascan/gp-repository</url>
         </snapshotRepository>
     </distributionManagement>
 
