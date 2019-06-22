@@ -89,7 +89,8 @@ jobs:
 
 workflows:
   version: 2
-  build-and-deploy:
+#  deployment should happen only for commits tagged by maven release plugin
+  build-test-and-maybe-deploy:
     jobs:
       - build
       - test:
@@ -102,8 +103,8 @@ workflows:
 #            branches:
 #              only: master
             tags:
+              only: /^.+\d+\.\d+\.\d+$/
 #              only: /^cci-test-\d+\.\d+\.\d+$/
-              only: /\d+\.\d+\.\d+/
 
 
 #dependencies:
