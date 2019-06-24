@@ -9,7 +9,7 @@
     </parent>
     <groupId>net.patrascan</groupId>
     <artifactId>cci-test</artifactId>
-    <version>0.0.14</version>
+    <version>0.0.15</version>
     <name>cci-test</name>
     <description>Demo project for Spring Boot</description>
 
@@ -109,6 +109,9 @@
                 <version>1.0-m5.1</version>
                 <configuration>
                     <noDeploy>true</noDeploy>
+                    <flowInitContext>
+                        <versionTagPrefix>cci-test-</versionTagPrefix>
+                    </flowInitContext>
                     <!-- see goals wiki page for configuration options -->
                 </configuration>
             </plugin>
