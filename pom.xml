@@ -109,6 +109,9 @@
                 <version>1.0-m5.1</version>
                 <configuration>
                     <noDeploy>true</noDeploy>
+                    <flowInitContext>
+                        <versionTagPrefix>cci-test-</versionTagPrefix>
+                    </flowInitContext>
                     <!-- see goals wiki page for configuration options -->
                 </configuration>
             </plugin>
