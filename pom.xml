@@ -9,7 +9,7 @@
     </parent>
     <groupId>net.patrascan</groupId>
     <artifactId>cci-test</artifactId>
-    <version>0.0.14-SNAPSHOT</version>
+    <version>0.0.13</version>
     <name>cci-test</name>
     <description>Demo project for Spring Boot</description>
 
